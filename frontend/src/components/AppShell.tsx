@@ -242,7 +242,7 @@ export default function AppShell({
 
       <div className={`transition-[padding] duration-200 ${collapsed ? "md:pl-16" : "md:pl-64"}`}>
         {/* navbar atas */}
-        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-line bg-white px-4">
+        <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b border-line bg-white px-4 md:px-8">
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -262,7 +262,7 @@ export default function AppShell({
           <ProfileMenu user={user} onLogout={logout} />
         </header>
 
-        <main className="mx-auto w-full max-w-4xl px-4 py-8 md:px-8">
+        <main className="w-full max-w-4xl px-4 py-8 md:px-8">
           <div className="mb-5">
             <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{title}</h1>
             {description && <p className="mt-1 text-sm text-muted">{description}</p>}
