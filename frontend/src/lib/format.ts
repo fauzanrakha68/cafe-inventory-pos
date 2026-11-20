@@ -6,3 +6,12 @@ export const fmtRp = (v: string | number) => 'Rp ' + Number(v).toLocaleString('i
 
 export const fmtDate = (d: string) =>
   new Date(d + 'T00:00:00').toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
+  export const fmtDateTime = (iso: string) =>
+  new Date(iso).toLocaleString('id-ID', {
+    timeZone: 'Asia/Jakarta',
+    day: '2-digit',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+  });

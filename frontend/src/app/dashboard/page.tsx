@@ -64,7 +64,12 @@ function LowStock() {
 function Content() {
   const user = getUser();
   if (user && user.role !== "kasir") return <LowStock />;
-  return <p className="text-muted">Menu dan layar kasir akan tersedia di langkah berikutnya.</p>;
+  return (
+    <p className="text-muted">
+      Siap berjualan? Buka layar{" "}
+      <Link href="/pos" className="font-medium text-ink hover:underline">Kasir</Link>.
+    </p>
+  );
 }
 
 export default function DashboardPage() {

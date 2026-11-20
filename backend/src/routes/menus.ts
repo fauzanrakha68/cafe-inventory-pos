@@ -46,8 +46,22 @@ function handleDbError(e: any, res: import('express').Response) {
 
 menusRouter.get('/', async (req, res) => {
   const seeAll = req.user!.role !== 'kasir';
+  // resep ikut dikirim sebagai ringkasan, supaya UI tidak perlu satu request per menu
   const { rows } = await pool.query(
-    'select id, name, price, active from menus where ($1::boolean or active) order by name',
+    `select m.id, m.name, m.price, m.active,
+       coalesce(
+         json_agg(
+           json_build_object('ingredient_id', ri.ingredient_id, 'name', i.name, 'unit', i.unit, 'quantity', ri.quantity::text)
+           order by i.name
+         ) filter (where ri.ingredient_id is not null),
+         '[]'::json
+       ) as recipe
+     from menus m
+     left join recipe_items ri on ri.menu_id = m.id
+     left join ingredients i on i.id = ri.ingredient_id
+     where ($1::boolean or m.active)
+     group by m.id
+     order by m.name`,
     [seeAll]
   );
   res.json(rows);

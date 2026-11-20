@@ -12,6 +12,8 @@ import {
   Package,
   PanelLeftClose,
   PanelLeftOpen,
+  ReceiptText,
+  UtensilsCrossed,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -22,6 +24,8 @@ const NAV: { href: string; label: string; icon: LucideIcon; roles: Role[] }[] = 
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["admin", "kasir", "store_keeper"] },
   { href: "/ingredients", label: "Bahan", icon: Package, roles: ["admin", "store_keeper"] },
   { href: "/stock", label: "Stok", icon: Boxes, roles: ["admin", "store_keeper"] },
+  { href: "/menus", label: "Menu", icon: UtensilsCrossed, roles: ["admin"] },
+  { href: "/pos", label: "Kasir", icon: ReceiptText, roles: ["admin", "kasir"] },
 ];
 
 const ROLE_LABEL: Record<Role, string> = {
