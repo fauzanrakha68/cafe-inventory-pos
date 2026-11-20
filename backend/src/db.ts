@@ -1,5 +1,8 @@
-import { Pool, PoolClient } from 'pg';
+import { Pool, PoolClient, types } from 'pg';
 import { config } from './config';
+
+// kolom DATE tetap string 'YYYY-MM-DD', tidak diubah jadi Date (hindari geser zona waktu)
+types.setTypeParser(1082, (v) => v);
 
 export const pool = new Pool({ connectionString: config.databaseUrl });
 
