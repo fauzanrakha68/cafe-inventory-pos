@@ -262,7 +262,7 @@ export default function AppShell({
           <ProfileMenu user={user} onLogout={logout} />
         </header>
 
-        <main className="w-full max-w-4xl px-4 py-8 md:px-8">
+        <main className="w-full px-4 py-8 md:px-8">
           <div className="mb-5">
             <h1 className="font-display text-2xl font-semibold tracking-tight text-ink">{title}</h1>
             {description && <p className="mt-1 text-sm text-muted">{description}</p>}

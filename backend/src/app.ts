@@ -5,6 +5,7 @@ import { usersRouter } from './routes/users';
 import { ingredientsRouter } from './routes/ingredients';
 import { menusRouter } from './routes/menus';
 import { stockRouter } from './routes/stock';
+import { salesRouter } from './routes/sales';
 
 export const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.use('/users', usersRouter);
 app.use('/ingredients', ingredientsRouter);
 app.use('/menus', menusRouter);
 app.use('/stock', stockRouter);
+app.use('/sales', salesRouter);
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
