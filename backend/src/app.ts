@@ -8,6 +8,8 @@ import { stockRouter } from './routes/stock';
 import { salesRouter } from './routes/sales';
 import { wasteRouter } from './routes/waste';
 import { opnamesRouter } from './routes/opnames';
+import { suppliersRouter } from './routes/suppliers';
+import { purchaseOrdersRouter } from './routes/purchaseOrders';
 
 export const app = express();
 app.use(cors());
@@ -22,6 +24,8 @@ app.use('/stock', stockRouter);
 app.use('/sales', salesRouter);
 app.use('/waste', wasteRouter);
 app.use('/opnames', opnamesRouter);
+app.use('/suppliers', suppliersRouter);
+app.use('/purchase-orders', purchaseOrdersRouter);
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
