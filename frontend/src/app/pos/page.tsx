@@ -183,7 +183,8 @@ function History({ version }: { version: number }) {
   }, []);
 
   useEffect(() => {
-    load();
+     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch awal, setState terjadi setelah await
+     load();
   }, [load, version]);
 
   async function toggle(id: number) {

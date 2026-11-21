@@ -185,6 +185,7 @@ export default function AppShell({
       return;
     }
     try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- baca preferensi dari localStorage setelah mount
       setCollapsed(localStorage.getItem(COLLAPSE_KEY) === "1");
     } catch {
       /* abaikan */

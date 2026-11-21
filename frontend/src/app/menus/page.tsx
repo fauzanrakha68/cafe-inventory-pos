@@ -34,6 +34,7 @@ function MenusView() {
   }, []);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch awal, setState terjadi setelah await
     load();
   }, [load]);
 
