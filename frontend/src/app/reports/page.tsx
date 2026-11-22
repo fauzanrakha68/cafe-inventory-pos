@@ -122,7 +122,7 @@ function ReportsView() {
 
           <h2 className="mb-2 font-display text-lg font-semibold tracking-tight text-ink">Per hari</h2>
           <div className="mb-6 overflow-x-auto rounded-md border border-line bg-white">
-            <table className="w-full min-w-[40rem] text-left text-sm">
+            <table className="w-full min-w-160 text-left text-sm">
               <thead className="border-b border-line bg-paper text-muted">
                 <tr>
                   <th className="px-4 py-2 font-medium">Tanggal</th>
