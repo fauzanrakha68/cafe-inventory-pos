@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   Boxes,
   ChevronDown,
+  ClipboardCheck,
+  FileText,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -13,6 +15,8 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ReceiptText,
+  Trash2,
+  Truck,
   UtensilsCrossed,
   X,
   type LucideIcon,
@@ -22,10 +26,14 @@ import { clearSession, getUser, type Role, type User } from "@/lib/api";
 
 const NAV: { href: string; label: string; icon: LucideIcon; roles: Role[] }[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, roles: ["admin", "kasir", "store_keeper"] },
+  { href: "/pos", label: "Kasir", icon: ReceiptText, roles: ["admin", "kasir"] },
+  { href: "/menus", label: "Menu", icon: UtensilsCrossed, roles: ["admin"] },
   { href: "/ingredients", label: "Bahan", icon: Package, roles: ["admin", "store_keeper"] },
   { href: "/stock", label: "Stok", icon: Boxes, roles: ["admin", "store_keeper"] },
-  { href: "/menus", label: "Menu", icon: UtensilsCrossed, roles: ["admin"] },
-  { href: "/pos", label: "Kasir", icon: ReceiptText, roles: ["admin", "kasir"] },
+  { href: "/purchase-orders", label: "Purchase order", icon: FileText, roles: ["admin", "store_keeper"] },
+  { href: "/suppliers", label: "Supplier", icon: Truck, roles: ["admin", "store_keeper"] },
+  { href: "/waste", label: "Pembuangan", icon: Trash2, roles: ["admin", "store_keeper"] },
+  { href: "/opnames", label: "Stock opname", icon: ClipboardCheck, roles: ["admin", "store_keeper"] },
 ];
 
 const ROLE_LABEL: Record<Role, string> = {
