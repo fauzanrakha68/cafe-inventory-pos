@@ -49,3 +49,23 @@ export async function api<T>(path: string, options: RequestInit = {}): Promise<T
   if (!res.ok) throw new Error(data.error ?? 'Terjadi kesalahan');
   return data as T;
 }
+
+// Unduh file (mis. CSV) dari endpoint yang butuh token: ambil sebagai blob lalu picu unduhan.
+export async function downloadFile(path: string, filename: string): Promise<void> {
+  const token = getToken();
+  const res = await fetch(`${API}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error ?? 'Gagal mengunduh file');
+  }
+  const url = URL.createObjectURL(await res.blob());
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}

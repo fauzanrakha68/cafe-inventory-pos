@@ -4,6 +4,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
+  BarChart3,
   Boxes,
   ChevronDown,
   ClipboardCheck,
@@ -34,6 +35,7 @@ const NAV: { href: string; label: string; icon: LucideIcon; roles: Role[] }[] = 
   { href: "/suppliers", label: "Supplier", icon: Truck, roles: ["admin", "store_keeper"] },
   { href: "/waste", label: "Pembuangan", icon: Trash2, roles: ["admin", "store_keeper"] },
   { href: "/opnames", label: "Stock opname", icon: ClipboardCheck, roles: ["admin", "store_keeper"] },
+  { href: "/reports", label: "Laporan", icon: BarChart3, roles: ["admin"] },
 ];
 
 const ROLE_LABEL: Record<Role, string> = {
