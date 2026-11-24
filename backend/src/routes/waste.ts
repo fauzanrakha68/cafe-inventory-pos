@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { pool, withTx } from '../db';
+import { audit } from '../audit';
 import { ClientError } from '../errors';
 import { authenticate, requireRole } from '../middleware/auth';
 import { allocate, applyTakes, lockBatches, toMilliFromNumber } from '../stockOps';
@@ -50,6 +51,10 @@ wasteRouter.post('/', async (req, res) => {
         [ingredient_id, fromMilli(need), reason, note ?? null, req.user!.id]
       );
       await applyTakes(client, ingredient_id, takes, 'waste', row.rows[0].id, req.user!.id);
+      await audit(client, req.user!.id, 'create', 'waste', row.rows[0].id, null, {
+        ...row.rows[0],
+        ingredient: ing.rows[0].name,
+      });
       return row.rows[0];
     });
     res.status(201).json(waste);

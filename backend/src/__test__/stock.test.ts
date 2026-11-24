@@ -41,6 +41,7 @@ describe('penerimaan barang dan stok', () => {
     await pool.query('delete from stock_movements where ingredient_id = $1', [ingredientId]);
     await pool.query('delete from stock_batches where ingredient_id = $1', [ingredientId]);
     await pool.query('delete from ingredients where id = $1', [ingredientId]);
+    await pool.query("delete from audit_logs where user_id in (select id from users where email like 's-%@test.local')");
     await pool.query("delete from users where email like 's-%@test.local'");
     await pool.end();
   });

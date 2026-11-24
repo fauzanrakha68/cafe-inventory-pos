@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import { pool } from '../db';
+import { audit } from '../audit';
 import { authenticate, requireRole } from '../middleware/auth';
 
 export const usersRouter = Router();
@@ -34,6 +35,7 @@ usersRouter.post('/', async (req, res) => {
        returning id, name, email, role`,
       [name, email, hash, role]
     );
+    await audit(pool, req.user!.id, 'create', 'user', rows[0].id, null, rows[0]);
     res.status(201).json(rows[0]);
   } catch (e: any) {
     if (e.code === '23505') return res.status(409).json({ error: 'Email sudah terdaftar' });

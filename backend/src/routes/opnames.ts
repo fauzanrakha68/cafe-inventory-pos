@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { pool, withTx } from '../db';
+import { audit } from '../audit';
 import { ClientError } from '../errors';
 import { authenticate, requireRole } from '../middleware/auth';
 import { allocate, applyTakes, lockBatches, toMilliFromNumber } from '../stockOps';
@@ -38,6 +39,7 @@ opnamesRouter.post('/', async (req, res) => {
       const id = head.rows[0].id as number;
 
       // bahan dikunci urut id, sama seperti penjualan, supaya tidak saling deadlock
+      const counted_items: { ingredient_id: number; system_qty: string; counted_qty: string }[] = [];
       const sorted = [...items].sort((a, b) => a.ingredient_id - b.ingredient_id);
       for (const it of sorted) {
         const ing = await client.query('select name from ingredients where id = $1', [it.ingredient_id]);
@@ -53,6 +55,11 @@ opnamesRouter.post('/', async (req, res) => {
            values ($1, $2, $3::numeric, $4::numeric)`,
           [id, it.ingredient_id, fromMilli(system), fromMilli(counted)]
         );
+        counted_items.push({
+          ingredient_id: it.ingredient_id,
+          system_qty: fromMilli(system),
+          counted_qty: fromMilli(counted),
+        });
 
         if (diff < 0n) {
           const { takes } = allocate(batches, -diff);
@@ -78,6 +85,7 @@ opnamesRouter.post('/', async (req, res) => {
           );
         }
       }
+      await audit(client, req.user!.id, 'create', 'opname', id, null, { note: note ?? null, items: counted_items });
       return id;
     });
     res.status(201).json(await getOpname(opnameId));

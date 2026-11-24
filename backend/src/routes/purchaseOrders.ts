@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { Pool, PoolClient } from 'pg';
 import { pool, withTx } from '../db';
+import { audit } from '../audit';
 import { ClientError } from '../errors';
 import { authenticate, requireRole } from '../middleware/auth';
 import { toMilliFromNumber } from '../stockOps';
@@ -112,6 +113,11 @@ purchaseOrdersRouter.post('/', async (req, res) => {
           [poId, items[i].ingredient_id, fromMilli(qty[i]), items[i].unit_cost]
         );
       }
+      await audit(client, req.user!.id, 'create', 'purchase_order', poId, null, {
+        supplier_id,
+        note: note ?? null,
+        items,
+      });
       return poId;
     });
     res.status(201).json(await getPO(pool, id));
@@ -173,6 +179,10 @@ purchaseOrdersRouter.post('/:id/receive', async (req, res) => {
         "update purchase_orders set status = 'received', received_at = now() where id = $1",
         [id]
       );
+      await audit(client, req.user!.id, 'receive', 'purchase_order', id, { status: 'ordered' }, {
+        status: 'received',
+        expires: Object.fromEntries(expiry),
+      });
     });
     res.status(201).json(await getPO(pool, id));
   } catch (e) {
@@ -184,10 +194,14 @@ purchaseOrdersRouter.post('/:id/receive', async (req, res) => {
 purchaseOrdersRouter.post('/:id/cancel', async (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return res.status(400).json({ error: 'ID tidak valid' });
-  const upd = await pool.query(
-    "update purchase_orders set status = 'cancelled' where id = $1 and status = 'ordered' returning id",
-    [id]
-  );
+  const upd = await withTx(async (client) => {
+    const r = await client.query(
+      "update purchase_orders set status = 'cancelled' where id = $1 and status = 'ordered' returning id",
+      [id]
+    );
+    if (r.rows[0]) await audit(client, req.user!.id, 'cancel', 'purchase_order', id, { status: 'ordered' }, { status: 'cancelled' });
+    return r;
+  });
   if (!upd.rows[0]) {
     const exists = await pool.query('select 1 from purchase_orders where id = $1', [id]);
     if (!exists.rows[0]) return res.status(404).json({ error: 'Purchase order tidak ditemukan' });

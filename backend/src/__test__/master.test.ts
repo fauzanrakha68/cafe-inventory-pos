@@ -32,6 +32,7 @@ describe('master data', () => {
   afterAll(async () => {
     await pool.query("delete from menus where name like 'm-%'");
     await pool.query("delete from ingredients where name like 'm-%'");
+    await pool.query("delete from audit_logs where user_id in (select id from users where email like 'm-%@test.local')"); 
     await pool.query("delete from users where email like 'm-%@test.local'");
     await pool.end();
   });

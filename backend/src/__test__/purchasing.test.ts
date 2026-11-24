@@ -83,6 +83,7 @@ afterAll(async () => {
   await pool.query(`delete from purchase_orders where created_by in ${users}`);
   await pool.query("delete from suppliers where name like 'p6-%'");
   await pool.query('delete from ingredients where id = any($1)', [ing]);
+  await pool.query("delete from audit_logs where user_id in (select id from users where email like 'p6-%@test.local')");
   await pool.query("delete from users where email like 'p6-%@test.local'");
   await pool.end();
 });

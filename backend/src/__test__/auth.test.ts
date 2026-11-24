@@ -27,6 +27,7 @@ describe('auth dan hak akses', () => {
   });
 
   afterAll(async () => {
+    await pool.query("delete from audit_logs where user_id in (select id from users where email like 't-%@test.local')");
     await pool.query("delete from users where email like 't-%@test.local'");
     await pool.end();
   });

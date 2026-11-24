@@ -4,6 +4,7 @@ import { Pool, PoolClient } from 'pg';
 import { pool, withTx } from '../db';
 import { authenticate, requireRole } from '../middleware/auth';
 import { parseId } from '../utils';
+import { audit } from '../audit';
 
 export const menusRouter = Router();
 menusRouter.use(authenticate);
@@ -93,7 +94,9 @@ menusRouter.post('/', requireRole('admin'), async (req, res) => {
           [menuId, item.ingredient_id, item.quantity]
         );
       }
-      return getMenu(client, menuId);
+      const created = await getMenu(client, menuId);
+      await audit(client, req.user!.id, 'create', 'menu', menuId, null, created);
+      return created;
     });
     res.status(201).json(menu);
   } catch (e) {
@@ -110,19 +113,15 @@ menusRouter.put('/:id', requireRole('admin'), async (req, res) => {
   if (hasDuplicate(recipe)) return res.status(400).json({ error: 'Bahan resep tidak boleh dobel' });
   try {
     const menu = await withTx(async (client) => {
-      const upd = await client.query(
-        'update menus set name = $1, price = $2, active = $3 where id = $4 returning id',
+      const before = await getMenu(client, id);
+      if (!before) return null;
+      await client.query(
+        'update menus set name = $1, price = $2, active = $3 where id = $4',
         [name, price, active, id]
       );
-      if (!upd.rows[0]) return null;
-      await client.query('delete from recipe_items where menu_id = $1', [id]);
-      for (const item of recipe) {
-        await client.query(
-          'insert into recipe_items (menu_id, ingredient_id, quantity) values ($1, $2, $3)',
-          [id, item.ingredient_id, item.quantity]
-        );
-      }
-      return getMenu(client, id);
+      const after = await getMenu(client, id);
+      await audit(client, req.user!.id, 'update', 'menu', id, before, after);
+      return after;
     });
     if (!menu) return res.status(404).json({ error: 'Menu tidak ditemukan' });
     res.json(menu);
@@ -135,8 +134,14 @@ menusRouter.delete('/:id', requireRole('admin'), async (req, res) => {
   const id = parseId(req.params.id);
   if (!id) return res.status(400).json({ error: 'ID tidak valid' });
   try {
-    const result = await pool.query('delete from menus where id = $1', [id]);
-    if (!result.rowCount) return res.status(404).json({ error: 'Menu tidak ditemukan' });
+    const found = await withTx(async (client) => {
+      const before = await getMenu(client, id);
+      if (!before) return false;
+      await client.query('delete from menus where id = $1', [id]);
+      await audit(client, req.user!.id, 'delete', 'menu', id, before, null);
+      return true;
+    });
+    if (!found) return res.status(404).json({ error: 'Menu tidak ditemukan' });
     res.status(204).end();
   } catch (e: any) {
     if (e.code === '23503') {

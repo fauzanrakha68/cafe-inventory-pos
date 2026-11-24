@@ -11,6 +11,7 @@ import { opnamesRouter } from './routes/opnames';
 import { suppliersRouter } from './routes/suppliers';
 import { purchaseOrdersRouter } from './routes/purchaseOrders';
 import { reportsRouter } from './routes/reports';
+import { auditRouter } from './routes/audit';
 
 export const app = express();
 app.use(cors());
@@ -28,6 +29,7 @@ app.use('/opnames', opnamesRouter);
 app.use('/suppliers', suppliersRouter);
 app.use('/purchase-orders', purchaseOrdersRouter);
 app.use('/reports', reportsRouter);
+app.use('/audit-logs', auditRouter);
 
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
