@@ -49,7 +49,7 @@ function Details({ log }: { log: Log }) {
     return (
       <ul className="space-y-1 text-sm">
         {keys.map((k) => (
-          <li key={k} className="break-words">
+          <li key={k} className="wrap-break-word">
             <span className="font-medium text-ink">{k}</span>{" "}
             <span className="text-muted line-through">{show(b[k])}</span>{" "}
             <span className="text-ink">{show(a[k])}</span>
@@ -63,7 +63,7 @@ function Details({ log }: { log: Log }) {
   return (
     <ul className="space-y-1 text-sm">
       {Object.entries(data).map(([k, v]) => (
-        <li key={k} className="break-words">
+        <li key={k} className="wrap-break-word">
           <span className="font-medium text-ink">{k}</span> <span className="text-muted">{show(v)}</span>
         </li>
       ))}
