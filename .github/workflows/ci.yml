@@ -40,6 +40,8 @@ jobs:
         run: npx tsc --noEmit
       - name: Migrasi database
         run: npm run migrate
+      - name: Seed demo (rekonsiliasi buku besar)
+        run: npm run seed:demo -- --reset
       - name: Test (Postgres sungguhan)
         run: npm test
 

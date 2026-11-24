@@ -2,7 +2,7 @@
 
 Sistem inventori dan kasir (POS) untuk kafe dengan **stok berbasis resep**: setiap penjualan memotong bahan baku sesuai resep menu, dari batch yang paling dulu kedaluwarsa (FEFO), aman walaupun banyak kasir menjual bersamaan.
 
-[![CI](https://github.com/<username>/cafe-inventory-pos/actions/workflows/ci.yml/badge.svg)](https://github.com/<username>/cafe-inventory-pos/actions/workflows/ci.yml)
+[![CI](https://github.com/fauzanrakha68/cafe-inventory-pos/actions/workflows/ci.yml/badge.svg)](https://github.com/fauzanrakha68/cafe-inventory-pos/actions/workflows/ci.yml)
 
 Proyek portofolio: Express 5 + TypeScript + PostgreSQL di backend, Next.js 16 + Tailwind v4 di frontend, 63 tes otomatis (termasuk tes konkurensi) yang jalan di CI.
 
@@ -58,17 +58,17 @@ Proyek portofolio: Express 5 + TypeScript + PostgreSQL di backend, Next.js 16 + 
 
 ```
 backend/
-  migrations/      skema SQL berurutan (001_init, 002_operations)
-  src/routes/      auth, users, ingredients, menus, stock, sales, waste,
-                   opnames, suppliers, purchaseOrders, reports, audit
-  src/stockOps.ts  kunci batch, alokasi FEFO, pencatatan buku besar
-  src/audit.ts     pencatat audit
-  src/seedDemo.ts  data demo 14 hari
-  src/__test__/    tes integrasi
+  migrations/        skema SQL berurutan (001_init, 002_operations)
+  src/routes/        auth, users, ingredients, menus, stock, sales, waste,
+                     opnames, suppliers, purchaseOrders, reports, audit
+  src/stockOps.ts    kunci batch, alokasi FEFO, pencatatan buku besar
+  src/audit.ts       pencatat audit
+  src/seedDemo.ts    data demo 14 hari
+  src/__test__/      tes integrasi
 frontend/
-  src/app/         halaman (kasir, stok, bahan, menu, PO, laporan, audit, dst.)
-  src/components/  AppShell (sidebar, navbar, menu profil)
-docker-compose.yml PostgreSQL untuk pengembangan
+  src/app/           halaman (kasir, stok, bahan, menu, PO, laporan, audit, dst.)
+  src/components/    AppShell (sidebar, navbar, menu profil)
+docker-compose.yml   PostgreSQL untuk pengembangan
 ```
 
 ## Menjalankan
